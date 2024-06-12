@@ -1,12 +1,12 @@
 const app = require("./app");
 const connectDatabase = require("./config/database");
-
 const dotenv = require("dotenv");
 
 // Setting up config file
 dotenv.config({ path: "backend/config/config.env" });
 
-console.log("DB_URI:", process.env.DB_URI);
+console.log("DB_LOCAL_URI:", process.env.DB_LOCAL_URI);
+
 // Connecting to database
 connectDatabase();
 
