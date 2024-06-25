@@ -2,20 +2,22 @@ const Product = require("../models/product");
 
 const ErrorHandler = require("../utils/errrorHandler");
 const catchAsyncErrors = require("../middlewares/catchSynchErrors");
+const APIFeatures = require("../utils/apiFeatures").default(
+  // Create new product   =>   /api/v1/admin/product/new
 
-// Create new product   =>   /api/v1/admin/product/new
+  (exports.newProduct = catchAsyncErrors(async (req, res, next) => {
+    const product = await Product.create(req.body);
 
-exports.newProduct = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.create(req.body);
-
-  res.status(201).json({
-    success: true,
-    product,
-  });
-});
-// Get all products   =>   /api/v1/products
+    res.status(201).json({
+      success: true,
+      product,
+    });
+  }))
+);
+// Get all products   =>   /api/v1/products ? keyword=apple
 exports.getProducts = async (req, res, next) => {
-  const products = await Product.find();
+  const apiFeatures = new APIFeatures(product.find(), req.query).search();
+  const products = await apiFeatures.query;
   res.status(200).json({
     success: true,
     count: products.length,
