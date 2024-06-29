@@ -111,6 +111,16 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
   if (req.body.password !== req.body.confirmPassword) {
     return next(new ErrorHandler("Password does not match", 400));
   }
+
+  // Setup new password
+  user.password = req.body.password;
+
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  sendToken(user, 200, res);
 });
 
 // Logout user   =>   /api/v1/logout
@@ -125,6 +135,3 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
     message: "Logged out",
   });
 });
-
-
-
